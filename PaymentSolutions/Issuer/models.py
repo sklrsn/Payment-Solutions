@@ -58,9 +58,9 @@ class Currency(models.Model):
 class Transaction(models.Model):
     issuer_account = models.ForeignKey(Account, related_name="from_account", on_delete=models.CASCADE)
     acquirer_account = models.ForeignKey(Account, related_name="to_account", on_delete=models.CASCADE)
-    billing_currency = models.OneToOneField(Currency, related_name="bill_currency", default=1)
+    billing_currency = models.ForeignKey(Currency, related_name="bill_currency", default=1)
     billing_amount = models.DecimalField(default=0.0, decimal_places=2, max_digits=10)
-    transaction_currency = models.OneToOneField(Currency, related_name="trans_currency", default=1)
+    transaction_currency = models.ForeignKey(Currency, related_name="trans_currency", default=1)
     transaction_amount = models.DecimalField(default=0.0, decimal_places=2, max_digits=10)
     transaction_status = models.CharField(max_length=10, blank=True)
     transaction_date = models.DateTimeField(default=datetime.datetime.now, blank=True)
@@ -70,7 +70,7 @@ class Transaction(models.Model):
         ordering = ['transaction_date']
 
     def __str__(self):
-        return self.id
+        return self.transaction_status
 
 
 class Transfer(models.Model):
