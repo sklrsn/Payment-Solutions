@@ -77,7 +77,7 @@ class Transfer(models.Model):
     account_number = models.ForeignKey(Account, related_name="account_details")
     transfer_amount = models.DecimalField(default=0.0, decimal_places=2, max_digits=10)
     transfer_type = models.CharField(max_length=20)  # authorisation, presentment
-    transaction_id = models.OneToOneField(Transaction, blank=True)
+    transaction_id = models.ForeignKey(Transaction, related_name="to_trans", on_delete=models.CASCADE)
     transfer_date = models.DateTimeField(default=datetime.datetime.now, blank=True)
 
     class Meta:
@@ -85,4 +85,4 @@ class Transfer(models.Model):
         ordering = ['transfer_date']
 
     def __str__(self):
-        return self.account_number
+        return str(self.account_number)
