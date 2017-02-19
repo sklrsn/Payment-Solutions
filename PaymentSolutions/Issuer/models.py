@@ -70,7 +70,7 @@ class Transaction(models.Model):
         ordering = ['transaction_date']
 
     def __str__(self):
-        return self.transaction_status
+        return str(self.id)
 
 
 class Transfer(models.Model):
