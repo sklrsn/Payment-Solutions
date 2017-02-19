@@ -25,3 +25,24 @@ class AuthorizationSerializer(serializers.Serializer):
         fields = (
             'type', 'card_id', 'transaction_id', 'merchant_name', 'merchant_country', 'merchant_mcc', 'billing_amount',
             'billing_currency', 'transaction_amount', 'transaction_currency')
+
+
+class PresentmentSerializer(serializers.Serializer):
+    type = serializers.CharField(max_length=None, min_length=None, allow_blank=False)
+    card_id = serializers.CharField(max_length=None, min_length=None, allow_blank=False)
+    transaction_id = serializers.CharField(max_length=None, min_length=None, allow_blank=False)
+    merchant_name = serializers.CharField(max_length=None, min_length=None, allow_blank=False)
+    merchant_country = serializers.CharField(max_length=None, min_length=None, allow_blank=False)
+    merchant_mcc = serializers.CharField(max_length=None, min_length=None, allow_blank=False)
+    billing_amount = serializers.CharField(max_length=None, min_length=None, allow_blank=False)
+    billing_currency = serializers.CharField(max_length=None, min_length=None, allow_blank=False)
+    transaction_amount = serializers.CharField(max_length=None, min_length=None, allow_blank=False)
+    transaction_currency = serializers.CharField(max_length=None, min_length=None, allow_blank=False)
+    settlement_amount = serializers.CharField(max_length=None, min_length=None, allow_blank=False)
+    settlement_currency = serializers.CharField(max_length=None, min_length=None, allow_blank=False)
+
+    class Meta:
+        fields = (
+            'type', 'card_id', 'transaction_id', 'merchant_name', 'merchant_country', 'merchant_mcc', 'billing_amount',
+            'billing_currency', 'transaction_amount', 'transaction_currency', 'settlement_amount',
+            'settlement_currency')

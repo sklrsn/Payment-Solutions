@@ -1,7 +1,4 @@
-from django.contrib.auth.models import User
-
-from .serializers import UserSerializer, AuthorizationSerializer
-from django.http import Http404
+from .serializers import AuthorizationSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -45,4 +42,10 @@ class Authorization(APIView):
 
 
 class Presentment(APIView):
-    pass
+    def post(self, request):
+        try:
+            print("Hello")
+        except Exception as e:
+            print(e)
+
+        return Response(status=status.HTTP_403_FORBIDDEN)
