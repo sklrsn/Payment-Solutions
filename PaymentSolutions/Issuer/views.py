@@ -24,8 +24,8 @@ class Authorization(APIView):
                 transaction_amt = serializer.data['transaction_amount']
                 transaction_type = serializer.data['type']
                 billing_amount = (Decimal(transaction_amt) * billing_currency.exchange_rate)
-                print(issuer_act.bank_account.balance)
-                print(billing_amount)
+
+                # check the account Balance with billing Amount
                 if issuer_act.bank_account.balance >= billing_amount:
                     transaction = Transaction(id=None, issuer_account=issuer_act.bank_account,
                                               acquirer_account=merchant_act.bank_account,
@@ -38,6 +38,7 @@ class Authorization(APIView):
                                               settlement_currency=billing_currency)
                     transaction.save()
 
+                    # Add an Entry to Transfer collection
                     transfer = Transfer(id=None, transfer_amount=-1 * Decimal(billing_amount),
                                         transfer_type=transaction_type, transaction_id=transaction,
                                         account_number=issuer_act.bank_account)
@@ -77,8 +78,7 @@ class Presentment(APIView):
                 settlement_amount = (Decimal(transaction_amt) * settlement_currency.exchange_rate)
                 billing_amount = (Decimal(transaction_amt) * billing_currency.exchange_rate)
 
-                print(issuer_act.bank_account.balance)
-                print(settlement_amount)
+                # check the account Balance with Settlement Amount
                 if issuer_act.bank_account.balance >= settlement_amount:
                     transaction = Transaction(id=None, issuer_account=issuer_act.bank_account,
                                               acquirer_account=merchant_act.bank_account,
@@ -117,6 +117,7 @@ class Wallet_Balance(APIView):
                 end = datetime.datetime.strptime(serializer.data['to_date'], "%Y-%m-%d")
                 end = datetime.datetime.date(end) + datetime.timedelta(days=1)
 
+                # Retrieve user bank account
                 issuer_act = CardInstrument.objects.get(card_number=serializer.data['card_id'])
                 transfers = Transfer.objects.filter(transfer_type="presentment", account_number=issuer_act.bank_account,
                                                     transfer_date__range=(start, end))
