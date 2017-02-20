@@ -1,9 +1,10 @@
-from .serializers import AuthorizationSerializer, PresentmentSerializer, TransactionSerializer
+from .serializers import AuthorizationSerializer, PresentmentSerializer, TransactionSerializer, BalanceReportSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Merchant, Account, CardInstrument, Currency, Transaction, Transfer
 from decimal import *
+import datetime
 
 
 class Authorization(APIView):
@@ -90,21 +91,37 @@ class Presentment(APIView):
         return Response(status=status.HTTP_403_FORBIDDEN)
 
 
-class Account_Balance(APIView):
-    def get(self, request, card_no):
-        issuer_act = CardInstrument.objects.get(card_number=card_no)
-        transfers = Transfer.objects.filter(transfer_type="presentment", account_number=issuer_act.bank_account)
-        amount = Decimal(0)
-        for transfer in transfers:
-            amount += transfer.transfer_amount
-        balance = dict()
-        balance['ledger_balance'] = amount + issuer_act.bank_account.balance
+class Wallet_Balance(APIView):
+    def post(self, request):
+        try:
+            serializer = BalanceReportSerializer(data=request.data)
+            if serializer.is_valid():
+                card_no = serializer.data['card_id']
+                start_date = serializer.data['from_date']
+                end_date = serializer.data['to_date']
 
-        transfers = Transfer.objects.filter(account_number=issuer_act.bank_account)
-        amount = Decimal(0)
-        for transfer in transfers:
-            amount += transfer.transfer_amount
+                start = datetime.datetime.strptime(start_date, "%Y-%m-%d")
+                end = datetime.datetime.strptime(end_date, "%Y-%m-%d")
+                end = datetime.datetime.date(end) + datetime.timedelta(days=1)
 
-        balance['available_balance'] = amount + issuer_act.bank_account.balance
+                issuer_act = CardInstrument.objects.get(card_number=card_no)
+                transfers = Transfer.objects.filter(transfer_type="presentment", account_number=issuer_act.bank_account,
+                                                    transfer_date__range=(start, end))
+                amount = Decimal(0)
+                for transfer in transfers:
+                    amount += transfer.transfer_amount
+                balance = dict()
+                balance['ledger_balance'] = amount + issuer_act.bank_account.balance
 
-        return Response(data=balance)
+                transfers = Transfer.objects.filter(account_number=issuer_act.bank_account,
+                                                    transfer_date__range=(start, end))
+                amount = Decimal(0)
+                for transfer in transfers:
+                    amount += transfer.transfer_amount
+
+                balance['available_balance'] = amount + issuer_act.bank_account.balance
+
+                return Response(data=balance, status=status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
+        return Response(status=status.HTTP_403_FORBIDDEN)

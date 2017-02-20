@@ -21,5 +21,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^authorize/', views.Authorization.as_view()),
     url(r'^presentment/', views.Presentment.as_view()),
-    url(r'^account_balance/(?P<card_no>[\w\-]+)/$', views.Account_Balance.as_view())
+    url(r'^wallet_balance/', views.Wallet_Balance.as_view())
 ]

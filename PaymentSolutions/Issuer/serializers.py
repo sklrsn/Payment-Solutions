@@ -57,3 +57,13 @@ class TransactionSerializer(serializers.ModelSerializer):
             'issuer_account', 'acquirer_account', 'billing_currency', 'billing_amount', 'transaction_currency',
             'transaction_amount', 'transaction_status', 'transaction_date',
             'settlement_currency', 'settlement_amount')
+
+
+class BalanceReportSerializer(serializers.Serializer):
+    card_id = serializers.CharField(max_length=None, min_length=None, allow_blank=False)
+    from_date = serializers.DateField()
+    to_date = serializers.DateField()
+
+    class Meta:
+        fields = (
+            'card_id', 'from_date', 'to_date')
