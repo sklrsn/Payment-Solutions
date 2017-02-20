@@ -6,6 +6,11 @@ from .models import Merchant, Account, CardInstrument, Currency, Transaction, Tr
 from decimal import *
 import datetime
 
+"""
+Authorize the Payment Request
+
+"""
+
 
 class Authorization(APIView):
     def post(self, request):
@@ -44,6 +49,12 @@ class Authorization(APIView):
             return Response(status=status.HTTP_403_FORBIDDEN)
 
         return Response(status=status.HTTP_403_FORBIDDEN)
+
+
+"""
+Presentment for the Payment Request
+
+"""
 
 
 class Presentment(APIView):
@@ -91,20 +102,22 @@ class Presentment(APIView):
         return Response(status=status.HTTP_403_FORBIDDEN)
 
 
+"""
+API to Generate Balance Report
+
+"""
+
+
 class Wallet_Balance(APIView):
     def post(self, request):
         try:
             serializer = BalanceReportSerializer(data=request.data)
             if serializer.is_valid():
-                card_no = serializer.data['card_id']
-                start_date = serializer.data['from_date']
-                end_date = serializer.data['to_date']
-
-                start = datetime.datetime.strptime(start_date, "%Y-%m-%d")
-                end = datetime.datetime.strptime(end_date, "%Y-%m-%d")
+                start = datetime.datetime.strptime(serializer.data['from_date'], "%Y-%m-%d")
+                end = datetime.datetime.strptime(serializer.data['to_date'], "%Y-%m-%d")
                 end = datetime.datetime.date(end) + datetime.timedelta(days=1)
 
-                issuer_act = CardInstrument.objects.get(card_number=card_no)
+                issuer_act = CardInstrument.objects.get(card_number=serializer.data['card_id'])
                 transfers = Transfer.objects.filter(transfer_type="presentment", account_number=issuer_act.bank_account,
                                                     transfer_date__range=(start, end))
                 amount = Decimal(0)
