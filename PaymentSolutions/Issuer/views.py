@@ -88,3 +88,23 @@ class Presentment(APIView):
             print(e)
 
         return Response(status=status.HTTP_403_FORBIDDEN)
+
+
+class Account_Balance(APIView):
+    def get(self, request, card_no):
+        issuer_act = CardInstrument.objects.get(card_number=card_no)
+        transfers = Transfer.objects.filter(transfer_type="presentment", account_number=issuer_act.bank_account)
+        amount = Decimal(0)
+        for transfer in transfers:
+            amount += transfer.transfer_amount
+        balance = dict()
+        balance['ledger_balance'] = amount + issuer_act.bank_account.balance
+
+        transfers = Transfer.objects.filter(account_number=issuer_act.bank_account)
+        amount = Decimal(0)
+        for transfer in transfers:
+            amount += transfer.transfer_amount
+
+        balance['available_balance'] = amount + issuer_act.bank_account.balance
+
+        return Response(data=balance)
