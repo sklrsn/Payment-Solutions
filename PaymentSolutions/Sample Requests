@@ -1,0 +1,40 @@
+Authorization
+
+{
+"type": "authorisation",
+"card_id": "4321LOBO",
+"transaction_id": "1234ZORRO",
+"merchant_name": "SNEAKERS R US",
+"merchant_country": "US",
+"merchant_mcc": "5139",
+"billing_amount": "^190.00",
+"billing_currency": "EUR",
+"transaction_amount": "200.00",
+"transaction_currency": "USD"
+}
+
+Presentment
+
+{
+	"type": "presentment",
+	"card_id": "4321LOBO",
+	"transaction_id": "4321ZORRO",
+	"merchant_name": "SNEAKERS R US",
+	"merchant_city": "LOS ANGELES",
+	"merchant_country": "US",
+	"merchant_mcc": "5139",
+	"billing_amount": "91.00",
+	"billing_currency": "EUR",
+	"transaction_amount": "100.00",
+	"transaction_currency": "USD",
+	"settlement_amount": "90.50",
+	"settlement_currency": "EUR"
+}
+
+Balance
+
+{
+"card_id" : "4321LOBO",
+"from_date":"2017-02-20",
+"to_date":"2017-02-20"
+}
