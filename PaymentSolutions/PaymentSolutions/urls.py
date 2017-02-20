@@ -19,5 +19,6 @@ from Issuer import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^authorize/', views.Authorization.as_view())
+    url(r'^authorize/', views.Authorization.as_view()),
+    url(r'^presentment/', views.Presentment.as_view())
 ]

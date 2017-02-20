@@ -2,6 +2,8 @@ from django.contrib.auth.models import User
 
 from rest_framework import serializers
 
+from .models import Transaction
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -46,3 +48,12 @@ class PresentmentSerializer(serializers.Serializer):
             'type', 'card_id', 'transaction_id', 'merchant_name', 'merchant_country', 'merchant_mcc', 'billing_amount',
             'billing_currency', 'transaction_amount', 'transaction_currency', 'settlement_amount',
             'settlement_currency')
+
+
+class TransactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Transaction
+        fields = (
+            'issuer_account', 'acquirer_account', 'billing_currency', 'billing_amount', 'transaction_currency',
+            'transaction_amount', 'transaction_status', 'transaction_date',
+            'settlement_currency', 'settlement_amount')

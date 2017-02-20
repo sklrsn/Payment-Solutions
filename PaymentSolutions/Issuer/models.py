@@ -12,7 +12,7 @@ class Account(models.Model):
         ordering = ['creation_date']
 
     def __str__(self):
-        return self.account_holder_name
+        return str(self.id)
 
 
 class CardInstrument(models.Model):
@@ -25,7 +25,7 @@ class CardInstrument(models.Model):
         ordering = ['issued_date']
 
     def __str__(self):
-        return self.card_number
+        return str(self.id)
 
 
 class Merchant(models.Model):
@@ -40,7 +40,7 @@ class Merchant(models.Model):
         ordering = ['merchant_name']
 
     def __str__(self):
-        return self.merchant_name
+        return str(self.id)
 
 
 class Currency(models.Model):
@@ -52,7 +52,7 @@ class Currency(models.Model):
         ordering = ["currency_code"]
 
     def __str__(self):
-        return self.currency_code
+        return str(self.id)
 
 
 class Transaction(models.Model):
@@ -64,6 +64,8 @@ class Transaction(models.Model):
     transaction_amount = models.DecimalField(default=0.0, decimal_places=2, max_digits=10)
     transaction_status = models.CharField(max_length=10, blank=True)
     transaction_date = models.DateTimeField(default=datetime.datetime.now, blank=True)
+    settlement_currency = models.ForeignKey(Currency, related_name="settle_currency", default=1)
+    settlement_amount = models.DecimalField(default=0.0, decimal_places=2, max_digits=10)
 
     class Meta:
         db_table = "Transaction"
@@ -85,4 +87,4 @@ class Transfer(models.Model):
         ordering = ['transfer_date']
 
     def __str__(self):
-        return str(self.account_number)
+        return str(self.id)
